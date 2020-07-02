@@ -11,14 +11,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- * Das Benutzerinterface, das Veränderugnen verursacht und auch Nachricht über 
- * Veränderungen erhält (s. Methode update).
+ * Das Benutzerinterface, das VerÃ¤nderugnen verursacht und auch Nachricht Ã¼ber 
+ * VerÃ¤nderungen erhÃ¤lt (s. Methode update).
  *
  */
 public class CounterView implements Observer {
 	private JFrame frame;
 	private JTextField tf;
-//	Das änderbare Modell
+//	Das ï¿½nderbare Modell
 	private Counter counter;
 	
 	public CounterView(String title, Counter c) {
@@ -36,7 +36,7 @@ public class CounterView implements Observer {
 		tfPanel.add(tf);
 		frame.add("North", tfPanel);
 		JPanel buttonPanel = new JPanel();
-		// herunterzählen
+		// herunterzï¿½hlen
 		JButton incButton = new JButton("Increment");
 		incButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -44,7 +44,7 @@ public class CounterView implements Observer {
 			}
 		} );
 		buttonPanel.add(incButton);
-		// hochzählen
+		// hochzï¿½hlen
 		JButton decButton = new JButton("Decrement");
 		decButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
