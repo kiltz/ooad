@@ -1,0 +1,47 @@
+@startuml
+
+title Abgabe / Übernahme
+ 
+class OrdKritSIB {
+    OrdKritListe holeAuswahlliste(LogIDs log, AuswahlOderVormerkDaten body)
+
+    OrdKritListe reserviereFuerUebernahme(LogIDs log, ReserviereFuerUebernahme body)
+    OkResponse uebernehmen(LogIDs log, Uebernehmen body)
+    OkResponse abgeben(LogIDs log, Abgeben body)
+    OkResponse widerrufeAbgabe(LogIDs log, OrdKrit body)
+    OrdKritListe sucheReservierteOrdKrit(LogIDs log, SucheReservierteOrdKrit body)
+    OkResponse storniereReserviertesOrdKrit(LogIDs log, OrdKrit body)
+    BoolResponse kannAbgegebenWerden(LogIDs log, OrdKrit body)
+}
+
+package daten {
+    class Uebernehmen {
+        #String ordKrit
+        #String abgabeOrdKrit
+    }
+    
+    class Abgeben {
+        #String ordKrit
+        #String uebernahmeOrdKrit
+    }
+    
+    note "Diese Typen sind noch in Bewegung. s. VERONIKA-10" as N1
+    Uebernehmen .. N1
+    Abgeben .. N1
+    
+    class ReserviereFuerUebernahme {
+        #OrdKritTyp ordKritTyp
+        #TypenRegel typenRegel
+        #PersonenArt personenArt
+        #ZusatzDaten reservierDaten
+    }
+    
+    class SucheReservierteOrdKrit {
+        #OrdKritTyp ordKritTyp
+        #TypenRegel typenRegel
+        #ZusatzDaten reservierDaten
+    }
+    
+    ReserviereFuerUebernahme --[hidden]> SucheReservierteOrdKrit
+}    
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+
+class ws {
+}
+class ueKonto {
+}
+class core {
+}
+
+ueKonto ..> ws 
+ueKonto --> core 
+
+@enduml

@@ -1,0 +1,105 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor red
+
+page 2x1
+
+title Zusammenspiel am Beispiel von vormerken bei VStNr
+
+package WebService {
+    interface OrdKritPort {
+        OrdKritListe vormerkenFuerNeuaufnahme(LogIDs log, AuswahlOderVormerkDaten body)
+    }
+    class OrdKritSIB {
+        -VeronikaConfigBean configBean
+        -RasterServiceBean rasterService
+        -FallTyp toXsd(FallTypInfo ft)
+        -OrdKritPort getZustaendigeImpl(String ordKrit)
+        -OrdKritPort getZustaendigeImpl(OrdKritTyp ordKritTyp)
+        -void wirfFehler(Exception e)
+    }
+    
+    OrdKritPort <|.. OrdKritSIB
+    
+    abstract class OrdKritPortImpl {
+        -RasterServiceBean rasterServiceBean
+        #RasterAbgrenzung ermittleRasterDaten(AuswahlOderVormerkDaten body, int bezNrLength)
+    }
+    OrdKritPort <|.. OrdKritPortImpl
+    
+    class VStNrPortImpl {
+        -VStnrService service
+        -VeronikaConfigBean configBean
+        -OrdKritListe machOrdKritListe(List<VStnrInfo> liste)
+        -AuswahlOderVormerkDaten erzeugeAuswahlOderVormerkDaten()
+        -void pruefeOrdKritOderTypenRegel(AuswahlOderVormerkDaten body)
+    }
+    OrdKritPortImpl <|-- VStNrPortImpl
+    
+    note top of OrdKritPortImpl : Für jeden OrdKrit-Typ gibt es eine Impl \nDefault: UnsupportedOperationException
+    
+    OrdKritSIB *-- OrdKritPortImpl 
+    
+    note "Die Verbindung wird über getZustaendigeImpl() realisiert" as N1
+    OrdKritSIB .. N1
+    N1 .. OrdKritPortImpl
+
+
+}
+
+
+
+package Service {
+
+    interface VStnrService {
+        VStnrInfo provideNeueSteuernummer(RasterAbgrenzung abgrenzung, VStnrDataTranscriber vStnrDataTranscriber)
+                throws ApplicationException;
+    }
+    class VStnrServiceBean {
+        #VStnrPoolRepository vStnrPoolRepository
+        -String[] machStartUndEndOrdKrit(RasterAbgrenzung abgrenzung)
+    
+    }
+    VStnrService <|.. VStnrServiceBean
+    
+    VStNrPortImpl *-- VStnrServiceBean
+
+}    
+
+package Data {
+    class VStnrPoolRepository {
+        ~VStnrPoolDataRepository dataRepo
+        -EntityManager em
+        +List<VStnrPoolEntity> findFree(String startOrdKrit, String endOrdKrit, Integer maxListenLaenge)
+     }
+     
+     VStnrServiceBean *-- VStnrPoolRepository
+     
+     interface VStnrPoolDataRepository extends JpaRepository {
+        Long getAnzahlDatensaetze()
+        Long getFreiNummernProTypenregel(VStatusIntern status, String start, String ende)
+        Long getNummernProTypenregel(String start, String ende)
+        VStnrPoolEntity findByIdAndStatus(String steuernummer, VStatusIntern[] status)
+        List<VStnrPoolEntity> findAllBlocks(String bufa, Integer bezirk)
+    }
+    
+    VStnrPoolRepository *-- VStnrPoolDataRepository 
+}
+
+OrdKritSIB -[hidden]> OrdKritPortImpl
+OrdKritPortImpl -[hidden]> VStnrService
+
+@enduml
+
+
+Backup für Formatierung: 
+     
+
+
+    VStnrService -[hidden]> VStNrPortImpl 
+    VeronikaService -[hidden]> VStNrPortImpl 
+
+    interface "JpaRepository<VStnrPoolEntity,String>" as JpaRepository_VStnrPoolEntity_String_ {
+    }
+    JpaRepository_VStnrPoolEntity_String_ <|.. VStnrPoolDataRepository

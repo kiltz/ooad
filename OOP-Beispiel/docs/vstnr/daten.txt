@@ -1,0 +1,132 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor red
+
+title Daten für vormerken per Raster bei VStNr
+
+note "XSD -> Generiert aus WSDL \nService -> Commons\nDAO -> Projekt:Model" as N2
+
+
+package XSD-Input {
+
+    class AuswahlOderVormerkDaten {
+        #String ordKrit (opt.)
+     
+    }
+
+    class ZusatzDaten {
+        #String name
+        #String vorname
+        #BigInteger startBezirkNr
+        #BigInteger startUnterNr
+        #BigInteger endBezirkNr
+        #BigInteger endUnterNr
+        #BigInteger maxListenLaenge
+        #BigInteger maxAnzahlBeteiligter
+        #String gesellschaftsSteuernummer
+    }
+    AuswahlOderVormerkDaten *-- ZusatzDaten
+
+    enum PersonenArt {
+        PERSON
+        GESELLSCHAFT
+        BETEILIGTE_PERSON
+        BETEILIGTE_GESELLSCHAFT
+        NICHT_UNTERSTUETZT
+    }
+    AuswahlOderVormerkDaten *-- PersonenArt
+
+    enum OrdKritTyp {
+        V_STNR
+        UE_KONTO_S_2
+    }
+    AuswahlOderVormerkDaten *-- OrdKritTyp
+
+    class TypenRegel {
+        #long bufaId
+        #long typenRegelId
+    }
+    AuswahlOderVormerkDaten "1" *-- "1..0" TypenRegel
+
+    note "entweder Typenregel oder OrdKrit" as N1
+    AuswahlOderVormerkDaten .. N1
+    N1 .. TypenRegel
+
+}
+
+
+package Service-Input {
+    class RasterAbgrenzung {
+        -String bufa
+        -Integer bezirk
+        -Integer uNr
+        -Integer bezirkMax
+        -Integer uNrMax
+        -boolean blockbildung
+    }
+    AuswahlOderVormerkDaten ..> RasterAbgrenzung : per OrdKritPortImpl->ermittleRaster
+    
+    RasterAbgrenzung ..> StartUndEndOrdKrit : VstNrServiceBean->machStartUndEndOrdKrit
+    note right of StartUndEndOrdKrit : als String[] 
+}
+
+package DAO-Input {
+    class Parameter {
+        -String startOrdKrit
+        -String endOrdKrit
+        }
+    StartUndEndOrdKrit ..> Parameter : String[] zu zwei Strings 
+}
+
+package DAO-Output {
+    class VStnrPoolEntity {
+        -long serialVersionUID
+        -String stnr
+        -String bufa
+        -Character merkzeichen
+        -Integer bezirk
+        -Integer unNr
+        -Character pz
+        -VStatusIntern status
+        -Date statusDatum
+        -String blockId
+        -String gesellschaftStnr
+        -String name
+        -String vorname
+        -PersonenArt personenArt
+        -String stnrUebernahme
+        -String stnrAbgabe
+        -String correlationId
+        -JaNein archivmerker
+        -Timestamp letztesUpdate
+        -Date beginnWBS
+    }
+}
+
+package Service-Output {
+    class VStnrInfo {
+        -VStatus status
+        -String name
+        -String vorname
+        -String stnrGesellschaft
+        -String blockId
+        -PersonenArt artDerPerson
+    }
+    VStnrPoolEntity ..> VStnrInfo : VStnrInfoFactory->createVStnrInfo()
+}
+
+package XSD-Output {
+    class OrdKritListe {
+        #List<String> ordKrit
+    }
+    VStnrInfo ..> OrdKritListe : VStNrPortImpl->machOrdKritListe
+}
+
+@enduml
+
+legend left
+  XSD -> Generiert aus WSDL
+  Service -> Commons
+  DAO -> Projekt:Model
+endlegend

@@ -1,0 +1,65 @@
+@startuml
+enum VStnrPruefzifferVerfahren {
+    PZV_2
+    PZV_11
+    PZV_11_BE
+    PZV_11_NW
+    PZV_11M
+    implementationClass
+    ~VStnrPruefzifferVerfahren(Class<? extends PruefzifferAlgorithmus> implementationClass)
+    +String getName()
+    +T createPruefzifferAlgorithmus(VStnrProfil vStnrProfil)
+}
+interface "PruefzifferVerfahren<VStnrProfil>" as PruefzifferVerfahren_VStnrProfil_ {
+}
+PruefzifferVerfahren_VStnrProfil_ <|.. VStnrPruefzifferVerfahren
+
+abstract class AbstractVStnrPruefzifferAlgorithmus {
+    +AbstractVStnrPruefzifferAlgorithmus(OrdKritTyp ordKritTyp, PruefzifferVerfahren<? extends OrdKritProfil> pruefzifferVerfahren)
+}
+
+AbstractOrdKritPruefzifferAlgorithmus <|-- AbstractVStnrPruefzifferAlgorithmus
+
+class VStnrPruefzifferAlgorithmus_11 {
+    -Logger LOG
+    -int[] FAKTOREN_1
+    -int[] FAKTOREN_2
+    -int[] FAKTOREN_3
+    -Map<BulaId,int[]> BL_FAKTOREN
+    -int[] faktoren
+    +VStnrPruefzifferAlgorithmus_11(VStnrProfil vStnrProfil)
+    #int computePruefZiffer(int[] numStNr)
+    #int[] getFaktoren(int[] numStNr)
+}
+AbstractVStnrPruefzifferAlgorithmus <|-- VStnrPruefzifferAlgorithmus_11
+
+interface PruefzifferAlgorithmus {
+    PruefzifferVerfahren<? extends OrdKritProfil> getVerfahren()
+    boolean checkPruefziffer(String vStnr)
+    char computePruefziffer(String vStnr)
+}
+
+abstract class AbstractOrdKritPruefzifferAlgorithmus {
+    -OrdKritTyp ordKritTyp
+    -PruefzifferVerfahren<? extends OrdKritProfil> pruefzifferVerfahren
+    #AbstractOrdKritPruefzifferAlgorithmus(OrdKritTyp ordKritTyp, PruefzifferVerfahren<? extends OrdKritProfil> pruefzifferVerfahren)
+    +char computePruefziffer(String ordKritNr)
+    +PruefzifferVerfahren<? extends OrdKritProfil> getVerfahren()
+    +boolean checkPruefziffer(String ordKritnr)
+}
+
+PruefzifferAlgorithmus <|.. AbstractOrdKritPruefzifferAlgorithmus
+
+class VStnrPruefzifferAlgorithmus_2 {
+    -Logger LOG
+    #Logger log
+    -int[] summanden
+    -int[] faktoren
+    +VStnrPruefzifferAlgorithmus_2(VStnrProfil vStnrProfil)
+    #int computePruefZiffer(int[] numStNr)
+    -int[] computeSummanden()
+    -int[] computeFaktoren()
+}
+AbstractVStnrPruefzifferAlgorithmus <|-- VStnrPruefzifferAlgorithmus_2
+
+@enduml

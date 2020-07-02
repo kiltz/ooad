@@ -1,0 +1,22 @@
+@startuml
+
+class core {
+}
+class uekonto {
+}
+
+class vstnr {
+}
+
+class admin {
+}
+
+
+uekonto --> core 
+vstnr --> core 
+admin --> core 
+
+admin --> uekonto
+admin --> vstnr
+
+@enduml

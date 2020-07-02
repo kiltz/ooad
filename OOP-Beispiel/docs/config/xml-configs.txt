@@ -1,0 +1,63 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor red
+title XML-Konfigurationsdateien (ohne Logging, ohne Test)
+
+note "die Bindestrich-Schreibweise wurde in \n CamelCase umgewandelt \n(veronika-config-default -> veronikaConfigDefault)" as N1
+
+package admin {
+    class veronikaAdminContext
+    class veronikaAdminConfig {
+        configurationFactory
+    }
+}
+
+package core {
+    class datasourceStandalone {
+        veronika.dataSource
+    }
+    class jpaPersistence 
+    class veronikaConfigDefault
+    class veronikaMainContext
+}
+
+package main {
+    class application {
+        jaxws-endpoint
+        jaxrs-services
+    }
+}
+
+package KONS_PRODUKTE_Extern {
+    class gecoVeronikaConfig
+}
+package proton <<Node>> {
+    class ProtonConfiguration {
+        jmx
+        logging
+        http
+        database
+        rest
+    } 
+    
+    class AppKit
+}
+ProtonConfiguration <|-- veronikaConfigDefault  
+ProtonConfiguration <|-- gecoVeronikaConfig  
+
+AppKit --> application
+application o-- "0..1" gecoVeronikaConfig : extern
+application o-- "1" veronikaConfigDefault : intern
+application *-- veronikaMainContext
+
+veronikaMainContext *-- datasourceStandalone
+veronikaMainContext --> jpaPersistence
+
+veronikaAdminContext *-- veronikaAdminConfig
+veronikaAdminContext *-- veronikaMainContext
+
+veronikaAdminConfig o-- "0..1" gecoVeronikaConfig : extern
+veronikaAdminConfig o-- "1" veronikaConfigDefault : intern
+
+@enduml

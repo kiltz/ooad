@@ -1,0 +1,35 @@
+@startuml
+title Gemeinsame Objekte
+
+class ZusatzDaten {
+    #String name
+    #String vorname
+    #BigInteger startBezirkNr
+    #BigInteger startUnterNr
+    #BigInteger maxListenLaenge
+    #BigInteger maxAnzahlBeteiligter
+    #String gesellschaftsSteuernummer
+}
+
+enum PersonenArt {
+    PERSON
+    GESELLSCHAFT
+    BETEILIGTE_PERSON
+    BETEILIGTE_GESELLSCHAFT
+    NICHT_UNTERSTUETZT
+}
+
+class TypeRegel {
+    #long bufaId
+    #long typenRegelId
+} 
+enum OrdKritTyp {
+	V_STNR
+	UE_KONTO_S_2
+}
+
+class OrdKriterium {
+	#String ordkrit
+}
+
+@enduml

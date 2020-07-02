@@ -1,0 +1,39 @@
+@startuml 
+
+class ws {
+}
+class utils {
+}
+class common {
+}
+class core {
+}
+class main <<AppKit>> {
+}
+class uekonto {
+}
+class vstnr {
+}
+class admin <<CLI>> {
+}
+class init <<CLI>> {
+}
+
+admin --> uekonto 
+admin --> vstnr 
+
+main --> uekonto 
+main --> vstnr 
+
+uekonto --> ws 
+vstnr --> ws 
+
+ws --> core 
+
+init --> common
+core --> common 
+
+common --> utils
+
+
+@enduml

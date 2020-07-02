@@ -1,0 +1,120 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor red
+
+title Schnittstellen für VStNr
+
+    interface OrdKritPort {
+        String getVersionsNummer(LogIDs log, Leer body)
+        ..
+        Erfolg pruefe(LogIDs log, OrdKriterium body)
+        Pruefziffer computePruefziffer(LogIDs log, OrdKriterium body)
+        FallTyp getFallTyp(LogIDs log, OrdKriterium body)
+        ..
+        OrdKritListe holeAuswahlliste(LogIDs log, AuswahlOderVormerkDaten body)
+        BoolResponse kannAbgegebenWerden(LogIDs log, OrdKriterium body)
+        ..
+        OrdKritListe vormerkenFuerNeuaufnahme(LogIDs log, AuswahlOderVormerkDaten body)
+        ..
+        OrdKritListe reserviereFuerUebernahme(LogIDs log, ReserviereFuerUebernahme body)
+        OkResponse abgeben(LogIDs log, Abgeben body)
+        OkResponse uebernehmen(LogIDs log, Uebernehmen body)
+        OkResponse widerrufeAbgabe(LogIDs log, OrdKriterium body)
+        OrdKritListe sucheReservierteOrdKrit(LogIDs log, SucheReservierteOrdKrit body)
+        OkResponse storniereReserviertesOrdKrit(LogIDs log, OrdKriterium body)
+        ..
+        OkResponse abschliessen(LogIDs log, Abschliessen body)
+        OkResponse abbrechen(LogIDs log, OrdKriterium body)
+        ..
+        OkResponse sperreOrdKrit(LogIDs log, OrdKriterium body)
+        OkResponse wiederbeleben(LogIDs log, OrdKriterium body)
+        ..
+        OkResponse setzeArchivmerker(LogIDs log, SetzeArchivmerker body)
+        BoolResponse leseArchivmerker(LogIDs log, OrdKriterium body)
+        ..
+        OkResponse meldeDefekt(LogIDs log, OrdKriterium body)
+        OrdKritListe sucheDarstVSteuernummern(LogIDs log, SucheDarstVSteuernummern body)
+        ..
+        OrdKriterium vormerkenFuerMoss(LogIDs log, VormerkenFuerMoss body)
+        OkResponse storniereMoss(LogIDs log, StorniereMoss body)
+        ..
+        LogischLoeschenErgebnis logischLoeschen(LogIDs log, LogischLoeschen body)
+    }
+
+
+    interface VStnrService {
+        List<VStnrInfo> anfordernAuswahlliste(RasterAbgrenzung abgrenzung, VStnrDataTranscriber vStnrDataTranscriber, Integer maxListenLaenge)
+        List<VStnrInfo> anfordernAuswahllisteGesellschaftSteuernummern(RasterAbgrenzung abgrenzung, VStnrGesellschaftDataTranscriber vStnrGesellschaftDataTranscriber, 
+                Integer maxAnzahlBeteiligter, Integer maxListenLaenge)
+        List<VStnrInfo> anfordernAuswahllisteFuerBeteiligung(RasterAbgrenzung abgrenzung, String gesellschaftSteuernummer, VStnrDataTranscriber vStnrDataTranscriber, 
+                Integer maxListenLaenge)
+        ..
+        VStnrInfo getVstNr(String steuernummer)
+        boolean kannAbgegebenWerden(String ordKrit)
+        ..
+        VStnrInfo provideNeueSteuernummer(RasterAbgrenzung abgrenzung, VStnrDataTranscriber vStnrDataTranscriber)
+        VStnrInfo provideNeueSteuernummer(String steuernummer, VStnrDataTranscriber vStnrDataTranscriber)
+        VStnrInfo provideNeueSteuernummerFuerBeteiligung(String gesellschaftSteuernummer, VStnrDataTranscriber vStnrDataTranscriber, RasterAbgrenzung abgrenzung)
+        VStnrInfo provideNeueSteuernummerFuerBeteiligung(String steuernummer, VStnrDataTranscriber vStnrDataTranscriber)
+        List<VStnrInfo> provideNeueSteuernummerFuerBeteiligungBlock(String gesellschaftSteuernummer, VStnrDataTranscriber vStnrDataTranscriber)
+        List<VStnrInfo> provideNeueGesellschaftSteuernummerBlock(RasterAbgrenzung abgrenzung, VStnrGesellschaftDataTranscriber gesellschaftDataTranscriber, 
+                Integer maxAnzahlBeteiligter)
+        VStnrInfo provideNeueGesellschaftSteuernummerBlock(String steuernummer, VStnrGesellschaftDataTranscriber gesellschaftDataTranscriber, Integer maxAnzahlBeteiligter)
+        void abschliessenNeuaufnahme(String steuernummer)
+        void abschliessenBeteiligung(String gesellschaftSteuernummer, String beteiligteSteuernummer)
+        void abschliessenGesellschaftSteuernummerBlock(String gewaehlteSteuernummer, Integer maxAnzahlBeteiligter)
+        ..
+        
+        void abschliessenReservierung(String steuernummer)
+        void abschliessenAbgabe(String steuernummer, String uebernahmeSteuernummer, AbgabeUebernahmeZusatzDaten abgabeUebernahmeZusatzDaten)
+        void abschliessenUebernahme(String steuernummer, String abgabeSteuernummer, AbgabeUebernahmeZusatzDaten abgabeUebernahmeZusatzDaten)
+        List<VStnrInfo> sucheReservierteSteuernummern(RasterAbgrenzung abgrenzung, String name, String vorname)
+        void widerrufeAbgabe(String steuernummer)
+        
+        ..
+        void abbrechen(String steuernummer)
+        ..
+        void sperreSteuernummer(String steuernummer)
+        void meldeDefekt(String steuernummer)
+        ..
+        List<VStnrInfo> sucheDarstSteuernummern(String[] namen)
+        ..
+        void setzeArchivmerker(String steuernummer, boolean neuerWert)
+        boolean leseArchivmerker(String steuernummer)
+        ..
+        void wiederbeleben(String ordKrit)
+        long getAnzahlFreieVstNr(String bufa, long typenregelId)
+        void logischLoeschen(String ordKrit, String name, String vorname, Date loeschDatum)
+    }
+
+
+
+    class VStnrPoolRepository {
+        +Long getAnzahlDatensaetze()
+        +VStnrPoolEntity findByIdAndStatus(String steuernummer, VStatusIntern[] status)
+        +List<VStnrPoolEntity> findFree(String startOrdKrit, String endOrdKrit, Integer maxListenLaenge)
+        +List<VStnrPoolEntity> findFreeGesellschaftBloecke(String startOrdKrit, String endOrdKrit, Integer maxListenLaenge)
+        +List<VStnrPoolEntity> findFreeBeteiligteBlockEntities(String blockGesellStnr)
+        +List<VStnrPoolEntity> findVorgemerktOrMarkedByCorrId(String steuerNr)
+        +List<VStnrPoolEntity> findReservedOrMarkedByCorrId(String steuerNr)
+        +List<VStnrPoolEntity> findVorgemerktOrReservedOrMarkedByCorrId(String steuerNr)
+        +List<VStnrPoolEntity> findAngefordertOrVorgemerktOrReservedOrMarkedByCorrId(String steuerNr)
+        +List<VStnrPoolEntity> findAngefordertFuerAuswahllisteOrMarkedByCorrId(String steuerNr)
+        +List<VStnrPoolEntity> findAllBlocks(String bufa, Integer bezirk)
+        +List<VStnrPoolEntity> findAktiveBlocks(String bufa, Integer bezirk)
+        +void updateBlockGesellschaftFuerBeteiligte(String bufa, Integer bezirk, String gesellschaftSteuernummer, List<int[]> unnrBeteiligteIntervalle)
+        +VStnrPoolEntity findOne(String steuernummer)
+        +VStnrPoolEntity save(VStnrPoolEntity steuernummer)
+        +VStnrPoolDataRepository getDataRepo()
+    }
+    
+    interface VStnrPoolDataRepository {
+        Long getAnzahlDatensaetze()
+        Long getFreiNummernProTypenregel(VStatusIntern status, String start, String ende)
+        Long getNummernProTypenregel(String start, String ende)
+        VStnrPoolEntity findByIdAndStatus(String steuernummer, VStatusIntern[] status)
+        List<VStnrPoolEntity> findAllBlocks(String bufa, Integer bezirk)
+    }
+
+@enduml

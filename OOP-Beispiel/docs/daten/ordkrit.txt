@@ -1,0 +1,65 @@
+@startuml
+abstract class OrdnungsKriterium {
+    -OrdKritTyp ordKritTyp
+    -BufaBezKey bufaBezKey
+    -Number ordUnNr
+    -String ordnungsNummer
+    -Character pruefZiffer
+}
+
+enum OrdKritTyp {
+    V_STNR
+    UE_KONTO_S2
+    merkZeichen
+    beschreibung
+    stelligkeit
+ }
+OrdnungsKriterium *-- OrdKritTyp
+
+class BufaBezKey {
+    #String buFa
+    #Integer bezirk
+}
+OrdnungsKriterium *-- BufaBezKey
+
+
+class UekontoNrInfo {
+    -UekontoStatus status
+    -long sequenz
+}
+OrdnungsKriterium <|-- UekontoNrInfo
+
+enum UekontoStatus {
+    IN_NEUANLAGE
+    AKTIV
+    GELOESCHT
+    ABGEGEBEN
+    description
+}
+UekontoNrInfo *-- UekontoStatus
+
+class VStnrInfo {
+    -long serialVersionUID
+    -VStatus status
+    -String name
+    -String vorname
+    -String stnrGesellschaft
+    -String blockId
+    -PersonenArt artDerPerson
+}
+OrdnungsKriterium <|-- VStnrInfo
+enum VStatus {
+    FREI
+    AKTIV
+    ...
+    description
+}
+VStnrInfo *-- VStatus
+
+enum PersonenArt {
+    NP
+    NNP
+}
+VStnrInfo *-- PersonenArt
+ 
+@enduml

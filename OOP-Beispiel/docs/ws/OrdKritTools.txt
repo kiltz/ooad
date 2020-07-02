@@ -1,0 +1,30 @@
+@startuml
+
+title Tools
+
+class OrdKritSIB {
+    Pruefziffer computePruefziffer(LogIDs log, OrdKriterium body)
+    Erfolg pruefe(LogIDs log, OrdKriterium body)
+
+    OkResponse setzeArchivmerker(LogIDs log, SetzeArchivmerker body)
+    BoolResponse leseArchivmerker(LogIDs log, OrdKrit body)
+
+    OkResponse sperreOrdKrit(LogIDs log, OrdKrit body)
+    OkResponse wiederbeleben(LogIDs log, OrdKrit body)
+    OkResponse meldeDefekt(LogIDs log, OrdKrit body)
+    OrdKritListe sucheDarstVSteuernummern(LogIDs log, SucheDarstVSteuernummern body)
+
+}
+
+package daten {
+
+    class SucheDarstVSteuernummern {
+        #List<String> name
+    }
+    class SetzeArchivmerker {
+        #String ordKrit
+        #boolean neuerWert
+    }
+}
+
+@enduml

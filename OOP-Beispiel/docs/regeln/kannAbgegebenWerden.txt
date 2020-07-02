@@ -1,0 +1,33 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor red
+title kannAbgegebenWerden für VStNr
+
+(*)  --> "Prüfe ob Veronika Master ist"  
+-down-> if "" then 
+        -down-> [Nein] "true"
+    else 
+        -down-> [ja] "suche VStnR"
+        
+        if "" then
+            -down-> [nicht vorhanden] "false"
+        else
+            -down-> [vorhanden] "prüfe Raster-Informationen"
+                if "" then
+                    -down->  [nicht erlaubt] "false"
+                else
+                    -down-> [erlaubt] Prüfe Status
+                    if "" then
+                        -down-> [aktiv] "true"
+                    else    
+                        -down-> [nicht aktiv] "false"
+                endif
+            
+        endif
+   endif
+endif   
+
+"true" -down->(*)
+"false" -down->(*)
+@enduml

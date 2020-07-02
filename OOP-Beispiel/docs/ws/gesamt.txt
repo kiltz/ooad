@@ -1,0 +1,92 @@
+@startuml
+class OrdKritSIB {
+    -- allgemein --
+    +Erfolg pruefe(LogIDs log, OrdKriterium body)
+    +PruefzifferAlgorithmus erzeugePruefzifferAlgorithmus(String ordKrit)
+    +Pruefziffer computePruefziffer(LogIDs log, OrdKriterium body)
+
+    -- Neuaufnahme --
+    +OrdKritListe vormerkenFuerNeuaufnahme(LogIDs log, AuswahlOderVormerkDaten body) FR/AL -> VP/VG/VB
+    +OkResponse abschliessen(LogIDs log, Abschliessen body) VP/VG/VB/VM/VD -> AK
+
+    -- Abgabe/Übernahme --
+    +OrdKritListe reserviereFuerUebernahme(LogIDs log, AuswahlOderReservierDaten body) FR/AL -> RP/RG/RB
+    +OkResponse uebernehmen(LogIDs log, Uebernehmen body) RP/RG/RB -> AK
+    +OkResponse storniereReserviertesOrdKrit(LogIDs log, OrdKriterium body) RP/RG/RB -> FR
+    +OkResponse abgeben(LogIDs log, Abgeben body) AK -> AB
+    +OkResponse widerrufeAbgabe(LogIDs log, OrdKriterium body) AB -> AK
+    +OrdKritListe sucheReservierteOrdKrit(LogIDs log, SucheReservierteOrdKrit body)
+    +BoolResponse kannAbgegebenWerden(LogIDs log, OrdKriterium body)
+
+    -- Neu und AÜ --
+    +OrdKritListe holeAuswahlliste(LogIDs log, AuswahlOderVormerkDaten body) FR -> AL
+    +OkResponse abbrechen(LogIDs log, OrdKriterium body)  AL/RP/RG/RB/VP/VG/VB/VM -> FR
+    +LogischLoeschenErgebnis logischLoeschen(LogIDs log, LogischLoeschen body) AK/AB/GS/GB/DF -> FR
+
+    -- MOSS --
+    +OrdKriterium vormerkenFuerMoss(LogIDs log, VormerkenFuerMoss body) FR -> VM
+    +OkResponse storniereMoss(LogIDs log, StorniereMoss body) VM -> FR
+    
+    -- sonstige --
+    +OkResponse sperreOrdKrit(LogIDs log, OrdKriterium body) AK/AB/GB -> GS
+    +OkResponse wiederbeleben(LogIDs log, OrdKriterium body) GS/GB -> AK
+    +OkResponse meldeDefekt(LogIDs log, OrdKriterium body) * -> DF
+
+    +OrdKritDetail holeOrdKrit(LogIDs log, OrdKriterium body)
+    +BoolResponse isVeronikaMaster(LogIDs log, IsVeronikaMaster body)
+    +String getVersionsNummer(LogIDs log, Leer body)
+    +FallTyp getFallTyp(LogIDs log, OrdKriterium body)
+    +BoolResponse leseArchivmerker(LogIDs log, OrdKriterium body)
+    +OkResponse setzeArchivmerker(LogIDs log, SetzeArchivmerker body)
+    +OrdKritListe sucheDarstVSteuernummern(LogIDs log, SucheDarstVSteuernummern body)
+
+    -- V3 --
+    +BehebeDefektResponse behebeDefekt(LogIDs log, BehebeDefekt body) DF -> *
+    +OkResponse loeschLaufAsync(LogIDs log, LoeschLauf body)
+    +OrdKritListe ermittlePseudoOrdkrit(LogIDs log, DatenZurErmittlung body)
+    
+}
+
+class RasterPortSIB {
+    +HoleRasterResponse holeRaster(LogIDs log, HoleRaster body)
+    
+    -- Admin des Rasters --
+    +OkResponse addRelationFallTypZuFallTypGruppe(LogIDs log, RelationIds body)
+    +Id createOrUpdateFallTypGruppe(LogIDs log, AddFallTypGruppe body)
+    +OkResponse addRelationBufaZuTypenRegel(LogIDs log, RelationIds body)
+    +Id createOrUpdateFallTyp(LogIDs log, FallTyp body)
+    +Id createOrUpdateTypenRegel(LogIDs log, TypenRegel body)
+    +Id createOrUpdateBufa(LogIDs log, Bufa body)
+    +OkResponse changeRelationTypenRegelZuFallTyp(LogIDs log, RelationIdsForChange body)
+    
+    +OkResponse deleteFallTyp(LogIDs log, Id body)
+    +OkResponse deleteRelationBufaZuTypenRegel(LogIDs log, RelationIds body)
+    +OkResponse deleteTypenRegel(LogIDs log, Id body)
+    +OkResponse deleteRelationFallTypZuFallTypGruppe(LogIDs log, RelationIds body)
+    +OkResponse deleteFallTypGruppe(LogIDs log, Id body)
+    +OkResponse deleteBufa(LogIDs log, Id body)
+    
+    +HoleBufasResponse holeBufas(LogIDs log, HoleBufas body)
+    +FallTypGruppen holeAlleFallTypGruppen(LogIDs log, Leer body)
+    +HoleFalltypenResponse holeFalltypen(LogIDs log, HoleFalltypen body)
+    +HoleTypenregelnResponse holeTypenregeln(LogIDs log, HoleTypenregeln body)
+    
+    -- Zusatzfunktionen --
+    +String getVersionsNummer(LogIDs log, Leer body)
+    +OkResponse setVeronikaMaster(LogIDs log, SetVeronikaMaster body)
+    
+    -- V3 allg. --
+    +SystemInfo getSystemInfo(LogIDs log, Leer body)
+
+    -- V3 admin. --
+    +void exportRaster(LogIDs log, Leer body)
+    +SuchePerStatusErgebnis suchePerStatus(LogIDs log, SuchePerStatus body)
+    +ZaehlePerTypenregelErgebnis zaehlePerTypenregel(LogIDs log, ZaehlePerTypenregel body)
+    +SucheStatusUebergaengeErgebnis sucheStatusUebergaenge(LogIDs log, SucheStatusUebergaenge body)
+    
+    -- V3 neue Vergabe. --
+    +FalltypenKurzListe getFalltypenPerAbgrenzung(LogIDs log, AbgrenzungsListe body)
+    +BufaKurzListe getBufaPerAbgrenzung(LogIDs log, AbgrenzungsListe body)
+    
+}
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+title Neuaufnahme
+
+class OrdKritSIB {
+    OrdKritListe holeAuswahlliste(LogIDs log, AuswahlOderVormerkDaten body)
+    OrdKritListe vormerkenFuerNeuaufnahme(LogIDs log, AuswahlOderVormerkDaten body)
+    OkResponse abschliessen(LogIDs log, Abschliessen body)
+    OkResponse abbrechen(LogIDs log, OrdKrit body)
+}
+
+package daten {
+    class AuswahlOderVormerkDaten {
+        #OrdKritTyp ordKritTyp
+        #String ordKrit
+        #TypenRegel typenRegel
+        #PersonenArt personenArt
+        #ZusatzDaten vormerkDaten
+    }
+    
+    class Abschliessen {
+        #String ordKrit
+        #BigInteger maxAnzahlBeteiligter
+    }
+}
+
+@enduml

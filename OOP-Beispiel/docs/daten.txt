@@ -1,0 +1,46 @@
+@startuml
+class FallTyp {
+    #boolean doppeln
+    #FallArten artDerFaelle
+}
+
+enum FallArten {
+    AN
+    SB
+    MOSS
+}
+
+FallTyp *-- FallArten
+
+class FallTypInfo {
+    #boolean doppeln
+    #FallArtenTyp artDerFaelle
+}
+
+enum FallArtenTyp {
+    AN
+    SB
+    MOSS
+}
+FallTypInfo *-- FallArtenTyp
+
+
+class RasterWSAssembler {
+    -FallTyp getFallTyp(FallTypInfo fallTyp)
+    +FallTypInfo toInfo(FallTyp body)
+    +FallTyp toXsd(FallTypInfo ft)
+}
+FallTyp <-- RasterWSAssembler
+FallTypInfo <-- RasterWSAssembler
+
+class FallTypEntity {
+    #JaNein doppeln
+    #FallArtenTyp artDerFaelle
+}
+
+class RasterEntityAssembler {
+    +FallTypInfo fromEntity(FallTyp fallTyp)
+}
+FallTypInfo <-- RasterEntityAssembler
+FallTypEntity <-- RasterEntityAssembler
+@enduml
