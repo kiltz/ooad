@@ -1,0 +1,59 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor red
+title Klassendiagramm für die Zusammenarbeit von Server zu mehreren Clients
+
+
+class ServerGUI {
+	-JButton jbBeenden
+	-JTextArea ausgabe
+}
+
+class ClientGUI{
+	-JTextField eingabe
+	-JTextArea ausgabe
+}
+
+class ChatServer  {
+	-List<Verbindung> verbindungen
+	+void beende()
+	+void sage(String txt)
+	+void sendeAnAlle(Kommando kdo)
+}
+
+ChatServer <--> ServerGUI
+ChatServer o-- "0..*" Verbindung
+
+class Verbindung [[java:features.chat.Verbindung]] {
+	-Socket socket
+	+void sende(Kommando obj)
+	-Serializable verarbeite(Serializable gesendet)
+	+void beende()
+}
+
+ClientGUI <--> ChatClient 
+class ChatClient  {
+	~Socket socket
+	+void sende(Kommando obj)
+	+void beende()
+	-void verarbeite(Serializable gesendet)
+}
+
+ChatClient "1" -->  "1" Verbindung
+
+ChatClient --> Kommando
+Verbindung --> Kommando
+ChatServer --> Kommando 
+ 
+class Kommando  {
+	-String kommando
+	-List<Serializable> parameter
+	-Serializable returnWert
+}
+interface Serializable [[java:java.io.Serializable]] {
+}
+Serializable <|.. Kommando
+
+
+@enduml

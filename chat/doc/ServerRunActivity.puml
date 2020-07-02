@@ -1,0 +1,28 @@
+@startuml
+
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor red
+title Run-Methode des Servers
+
+start
+
+:ServerSocket erzeugen;
+
+if (ok) then (true)
+  :Ausgabe\n"Warte auf Client...";
+  :warten auf Verbindung;
+  :InetAddress merken;
+  :Ausgabe\nHostAdress;
+  :Ausgabe\nHostName;
+  :Verbindung erzeugen;
+  :Verbindung zu Verbindungsliste hinzufügen;
+else (false)
+  :Server schließen;
+endif
+
+:This is on defined on
+several **lines**;
+
+stop
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 2
+skinparam titleBorderColor red
+title Anwendungsfälle des Chats
+
+
+Admin --> (Server starten)
+Admin --> (Server beenden)
+
+
+Benutzer --> (Client starten)  
+Benutzer --> (Nachricht senden)  
+Benutzer --> (Nachricht empfangen)  
+Benutzer --> (Client beenden)  
+
+@enduml
