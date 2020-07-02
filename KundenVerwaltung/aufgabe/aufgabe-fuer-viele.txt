@@ -1,0 +1,11 @@
+Speichern eines Kunden
+=======================
+
+4. Aufgabe
+----------
+Erweitere das Diagramm aus Aufgabe 2 um die Beteiligten für das Speichern eines Kunden.
+
+5. Aufgabe
+----------
+Erzeuge ein SequenzDiagramm für die Methode "speichern" im "NeuController".
+

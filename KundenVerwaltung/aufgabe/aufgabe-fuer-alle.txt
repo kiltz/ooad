@@ -1,0 +1,18 @@
+Der Weg zum NeuDialog
+=====================
+
+1. Aufgabe
+----------
+Zeige die Klassen und nicht-privaten Methoden bis zur Anzeige des Neu-Dialogs 
+in einem Klassendiagramm. Beschränke Dich dabei auf die Klassen, die im Projekt 
+erstellt wurden (Paket de.verbund.**, keine Java-Klassen als eigene Kästchen ;--) ).
+Startklasse ist: de.verbund.kunden.Starter 
+
+2. Aufgabe
+----------
+Wo könnte man einfach die drei Testkunden um einen vierten erweitern?
+
+3. Aufgabe
+----------
+Welche der gefunden Klassen müssen geändert werden, wenn der Kunde um ein Feld "anrede" 
+erweitert werden soll. 

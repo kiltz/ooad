@@ -1,0 +1,8 @@
+Observer
+========
+
+6. Aufgabe
+----------
+Welche Klassen und Methoden sind dafür zuständig, dass bei der Neueingabe auch gleich 
+die Such-Dialoge aktualisiert werden?
+ 
