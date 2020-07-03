@@ -1,0 +1,62 @@
+@startuml
+
+class Anwendung [[java:oop.beispiel.Anwendung]] {
+	+{static}void main(String[] args)
+}
+ Anwendung  "erzeugt" --> Bild
+
+class Bild [[java:oop.beispiel.Bild]] {
+	~int breite
+	~int hoehe
+	~Graphics zeichenflaeche
+	+Bild()
+	+Bild(int breite, int hoehe)
+	+void add(Element neu)
+	+void draw()
+	+void paint(Graphics g)
+	-void init()
+}
+class JFrame [[java:javax.swing.JFrame]] {
+}
+JFrame <|-- Bild
+
+abstract class Element [[java:oop.beispiel.Element]] {
+	~int rot
+	~int gruen
+	~int blau
+	~int x
+	~int y
+	+void setFarbe(int rot, int gruen, int blau)
+	~void setStartPunkt(int x, int y)
+}
+
+Bild "1" o-- "0..*" Element
+
+interface Drawable [[java:oop.beispiel.Drawable]] {
+	void draw(Graphics zeichenflaeche)
+}
+
+class Kreis [[java:oop.beispiel.Kreis]] {
+	-int radius
+	+Kreis(int x, int y, int radius)
+}
+Element <|-- Kreis
+
+Drawable <|.. Kreis
+
+class Punkt [[java:oop.beispiel.Punkt]] {
+	+Punkt(int x, int y)
+}
+Element <|-- Punkt
+Drawable <|.. Punkt
+
+class Strich [[java:oop.beispiel.Strich]] {
+	~int x2
+	~int y2
+	+Strich(int x, int y, int x2, int y2)
+}
+Element <|-- Strich
+Drawable <|.. Strich
+
+
+@enduml

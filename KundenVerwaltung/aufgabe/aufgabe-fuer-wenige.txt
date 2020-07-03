@@ -3,6 +3,6 @@ Observer
 
 6. Aufgabe
 ----------
-Welche Klassen und Methoden sind dafür zuständig, dass bei der Neueingabe auch gleich 
+Welche Klassen und Methoden sind dafÃ¼r zustÃ¤ndig, dass bei der Neueingabe auch gleich 
 die Such-Dialoge aktualisiert werden?
  

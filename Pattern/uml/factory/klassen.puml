@@ -1,0 +1,39 @@
+@startuml
+
+class Tester [[java:factory.Tester]] {
+	+{static}void main(String[] args)
+}
+
+interface Service [[java:factory.Service]] {
+	void machWas()
+	void machNochEtwas()
+}
+
+Tester "2." --> Service
+
+class ServiceFactory [[java:factory.ServiceFactory]] {
+	+{static}Service createService()
+}
+
+Tester "1." --> ServiceFactory
+
+ServiceFactory --> DummyServiceImpl
+ServiceFactory --> InMemoryServiceImpl
+
+class DummyServiceImpl [[java:factory.DummyServiceImpl]] {
+	#DummyServiceImpl()
+	+void machWas()
+	+void machNochEtwas()
+}
+
+Service <|.. DummyServiceImpl
+
+class InMemoryServiceImpl [[java:factory.InMemoryServiceImpl]] {
+	#InMemoryServiceImpl()
+	+void machWas()
+	+void machNochEtwas()
+}
+Service <|.. InMemoryServiceImpl
+
+
+@enduml

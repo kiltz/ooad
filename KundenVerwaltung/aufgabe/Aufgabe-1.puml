@@ -1,0 +1,62 @@
+@startuml
+class Starter [[java:de.verbund.kunden.Starter]] {
+	+{static}void main(String[] args)
+}
+
+Starter --> HauptFenster
+
+class HauptFenster [[java:de.verbund.kunden.gui.view.HauptFenster]] {
+	+HauptFenster()
+	#void zeigNeu()
+}
+
+class NeuController [[java:de.verbund.kunden.gui.controller.NeuController]] {
+	+{static}NeuController installController(HauptFenster fenster)
+}
+
+HauptFenster <--> NeuController
+
+class NeuModel [[java:de.verbund.kunden.gui.model.NeuModel]] {
+	+NeuModel(NeuController neuController)
+}
+
+NeuController <--> NeuModel
+
+
+class NeuView [[java:de.verbund.kunden.gui.view.NeuView]] {
+	-JLabel lName
+	-JTextField tfName
+	-JLabel lKdNr
+	-JTextField tfKdNr
+	-JLabel lInfo
+	-JButton bSpeicher
+	+NeuView(HauptFenster hauptFenster, NeuController neuController, NeuModel neuModel)
+}
+
+NeuView <--> NeuController
+NeuView *--> HauptFenster
+NeuView *--> NeuModel
+
+class KundenBD [[java:de.verbund.kunden.KundenBD]] {
+}
+
+NeuController *--> KundenBD
+
+interface KundenVerwaltung [[java:de.verbund.kunden.service.KundenVerwaltung]] {
+}
+
+KundenBD o-- KundenVerwaltung
+
+class ServiceLocator [[java:de.verbund.kunden.ServiceLocator]] {
+	+{static}KundenVerwaltung getKundenVerwaltung()
+}
+KundenBD --> ServiceLocator
+
+ServiceLocator --> KundenVerwaltung
+ServiceLocator --> KundenVerwaltungDummyImpl
+
+class KundenVerwaltungDummyImpl [[java:de.verbund.kunden.service.KundenVerwaltungDummyImpl]] {
+}
+KundenVerwaltung <|.. KundenVerwaltungDummyImpl
+
+@enduml
