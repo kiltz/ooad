@@ -8,11 +8,15 @@ Starter --> HauptFenster
 class HauptFenster [[java:de.verbund.kunden.gui.view.HauptFenster]] {
 	+HauptFenster()
 	#void zeigNeu()
+	+void notifyObservers()
 }
 
 class NeuController [[java:de.verbund.kunden.gui.controller.NeuController]] {
 	+{static}NeuController installController(HauptFenster fenster)
+	+void speichern()
 }
+NeuController "erzeugt" --> Kunde
+
 
 HauptFenster <--> NeuController
 
@@ -31,6 +35,9 @@ class NeuView [[java:de.verbund.kunden.gui.view.NeuView]] {
 	-JLabel lInfo
 	-JButton bSpeicher
 	+NeuView(HauptFenster hauptFenster, NeuController neuController, NeuModel neuModel)
+	#void speicher()
+	+void meldeOk(Long id)
+	+void meldeFehler(String message)
 }
 
 NeuView <--> NeuController
@@ -38,11 +45,13 @@ NeuView *--> HauptFenster
 NeuView *--> NeuModel
 
 class KundenBD [[java:de.verbund.kunden.KundenBD]] {
+   +Kunde neuerKunde(Kunde k)
 }
 
 NeuController *--> KundenBD
 
 interface KundenVerwaltung [[java:de.verbund.kunden.service.KundenVerwaltung]] {
+	Kunde neuerKunde(Kunde k)
 }
 
 KundenBD o-- KundenVerwaltung
@@ -56,6 +65,7 @@ ServiceLocator --> KundenVerwaltung
 ServiceLocator --> KundenVerwaltungDummyImpl
 
 class KundenVerwaltungDummyImpl [[java:de.verbund.kunden.service.KundenVerwaltungDummyImpl]] {
+	Kunde neuerKunde(Kunde k)
 }
 KundenVerwaltung <|.. KundenVerwaltungDummyImpl
 
@@ -66,5 +76,12 @@ class Kunde [[java:de.verbund.kunden.dto.Kunde]] {
 	-String kdNr
 }
 
+class KundenObservable [[java:de.verbund.kunden.gui.utils.KundenObservable]] {
+	+void setChanged()
+}
+class Observable [[java:java.util.Observable]] {
+}
+Observable <|-- KundenObservable
 
+HauptFenster *--> KundenObservable
 @enduml
